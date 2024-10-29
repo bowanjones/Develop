@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BudgetTrackerGUI extends JFrame {
-    private Budget budget;
+    private Map<String, Budget> budgets; // Store budgets for different months
+    private String currentMonth; // Track the current month
     private JTextField amountField;
     private JTextField categoryField;
     private DefaultTableModel tableModel;
@@ -16,7 +17,10 @@ public class BudgetTrackerGUI extends JFrame {
     private JLabel totalLabel;
 
     public BudgetTrackerGUI() {
-        budget = new Budget();
+        budgets = new HashMap<>();
+        currentMonth = "January"; // Default month
+        budgets.put(currentMonth, new Budget()); // Initialize budget for the default month
+
         setTitle("Budget Tracker");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,6 +69,16 @@ public class BudgetTrackerGUI extends JFrame {
         totalLabel = new JLabel("Total Balance: $0.00");
         add(totalLabel, BorderLayout.SOUTH);
 
+        // Month Switch Button
+        JButton switchMonthButton = new JButton("Switch Month");
+        switchMonthButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchMonth();
+            }
+        });
+        inputPanel.add(switchMonthButton);
+
         // Button Actions
         addIncomeButton.addActionListener(new ActionListener() {
             @Override
@@ -79,6 +93,19 @@ public class BudgetTrackerGUI extends JFrame {
                 addExpense();
             }
         });
+
+        updateTotal();
+    }
+
+    private void switchMonth() {
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String month = (String) JOptionPane.showInputDialog(this, "Select Month:", "Month Selector", JOptionPane.PLAIN_MESSAGE, null, months, currentMonth);
+        if (month != null && !month.isEmpty()) {
+            currentMonth = month;
+            budgets.putIfAbsent(currentMonth, new Budget()); // Initialize budget for the selected month if not present
+            updateTable();
+            updateTotal();
+        }
     }
 
     private void addIncome() {
@@ -86,7 +113,7 @@ public class BudgetTrackerGUI extends JFrame {
             double income = Double.parseDouble(amountField.getText());
             String category = categoryField.getText().trim();
             if (income >= 0) {
-                budget.addIncome(income, category);
+                budgets.get(currentMonth).addIncome(income, category);
                 updateTable(category, income);
                 updateTotal();
                 amountField.setText("");
@@ -104,7 +131,7 @@ public class BudgetTrackerGUI extends JFrame {
             double expense = Double.parseDouble(amountField.getText());
             String category = categoryField.getText().trim();
             if (expense >= 0) {
-                budget.addExpense(expense, category);
+                budgets.get(currentMonth).addExpense(expense, category);
                 updateTable(category, -expense); // Use negative for expenses
                 updateTotal();
                 amountField.setText("");
@@ -130,11 +157,18 @@ public class BudgetTrackerGUI extends JFrame {
         if (!categoryExists) {
             tableModel.addRow(new Object[]{category, amount});
         }
-        // No need to refresh the table manually
+    }
+
+    private void updateTable() {
+        tableModel.setRowCount(0); // Clear existing data
+        Map<String, Double> categoryTotals = budgets.get(currentMonth).getCategoryTotals();
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()) {
+            tableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+        }
     }
 
     private void updateTotal() {
-        double total = budget.getBalance();
+        double total = budgets.get(currentMonth).getBalance();
         totalLabel.setText("Total Balance: $" + String.format("%.2f", total));
     }
 
