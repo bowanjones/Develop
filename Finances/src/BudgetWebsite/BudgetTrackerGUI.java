@@ -28,25 +28,43 @@ public class BudgetTrackerGUI extends JFrame {
 
         // Input Panel
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 2));
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS)); // Change to BoxLayout
 
         inputPanel.add(new JLabel("Amount:"));
         amountField = new JTextField();
         inputPanel.add(amountField);
 
+        inputPanel.add(Box.createVerticalStrut(10)); // Optional space
+
         inputPanel.add(new JLabel("Category:"));
         categoryField = new JTextField();
         inputPanel.add(categoryField);
 
+        inputPanel.add(Box.createVerticalStrut(10)); // Optional space
+
         JButton addIncomeButton = new JButton("Add Income");
         addIncomeButton.setForeground(Color.WHITE);
         addIncomeButton.setBackground(new Color(0, 120, 0)); // Darker green
+        inputPanel.add(addIncomeButton);
+
+        inputPanel.add(Box.createVerticalStrut(10)); // Optional space
+
         JButton addExpenseButton = new JButton("Add Expense");
         addExpenseButton.setForeground(Color.WHITE);
         addExpenseButton.setBackground(new Color(150, 0, 0)); // Darker red
-
-        inputPanel.add(addIncomeButton);
         inputPanel.add(addExpenseButton);
+
+        inputPanel.add(Box.createVerticalStrut(10)); // Optional space
+
+        // Month Switch Button
+        JButton switchMonthButton = new JButton("Switch Month");
+        switchMonthButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchMonth();
+            }
+        });
+        inputPanel.add(switchMonthButton);
 
         add(inputPanel, BorderLayout.NORTH);
 
@@ -68,16 +86,6 @@ public class BudgetTrackerGUI extends JFrame {
         // Total label at the bottom
         totalLabel = new JLabel("Total Balance: $0.00");
         add(totalLabel, BorderLayout.SOUTH);
-
-        // Month Switch Button
-        JButton switchMonthButton = new JButton("Switch Month");
-        switchMonthButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                switchMonth();
-            }
-        });
-        inputPanel.add(switchMonthButton);
 
         // Button Actions
         addIncomeButton.addActionListener(new ActionListener() {

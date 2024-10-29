@@ -7,5 +7,13 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:3.1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:3.1.10" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:6.0.18" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:6.0.18" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:3.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:6.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:6.1.6" level="project" />
   </component>
 </module>
